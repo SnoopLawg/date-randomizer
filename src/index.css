@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* existing custom styles (if needed) */
+/*:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  ... 
+}*/
+
+:root {
+  --primary-lightest: #C9FBFF;
+  --primary-light: #c2fcf7;
+  --primary: #85bdbf;
+  --primary-dark: #57737a;
+  --primary-darkest: #040f0f;
+  
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
+  color: var(--primary-darkest);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+/* Remove or comment out the dark theme styles */
+
+a {
+  font-weight: 500;
+  color: var(--primary-dark);
+  text-decoration: inherit;
+}
+a:hover {
+  color: var(--primary);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid var(--primary);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary-light);
+  color: var(--primary-darkest);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+button:hover {
+  background-color: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto var(--primary);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* Your other styles below */
+
+/* Override Bootstrap primary color */
+.btn-primary {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary-darkest) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary) !important;
+  color: white !important;
+}
+
+.bg-primary {
+  background-color: var(--primary) !important;
+}
+
+.text-primary {
+  color: var(--primary-dark) !important;
+}
+
+/* Card styling */
+.card {
+  border-color: var(--primary-light);
+}
+
+.card-header {
+  background-color: var(--primary) !important;
+  color: white;
+}
+
+/* Form control focus states */
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.25rem rgba(133, 189, 191, 0.25);
+}

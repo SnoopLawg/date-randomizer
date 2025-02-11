@@ -1,0 +1,45 @@
+.price-range-container {
+  padding: 20px 10px;
+}
+
+.price-range-slider {
+  height: 4px;
+  background: #dee2e6;
+}
+
+.range-slider__range {
+  background: #0d6efd;
+}
+
+.range-slider__thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0d6efd;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.range-slider__thumb:hover {
+  transform: scale(1.1);
+}
+
+.range-slider__thumb[data-active] {
+  transform: scale(1.1);
+}
+
+.form-range {
+  height: 1.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+  background: #0d6efd;
+}
+
+.form-range::-moz-range-thumb {
+  background: #0d6efd;
+}
+
+.form-range::-ms-thumb {
+  background: #0d6efd;
+} 

@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifiers": true
+  }
+} 

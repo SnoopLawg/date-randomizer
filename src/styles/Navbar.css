@@ -1,0 +1,94 @@
+.navbar {
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--primary-lightest) !important;
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid var(--primary);
+}
+
+.navbar-brand {
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  font-weight: bold;
+  color: var(--primary-darkest) !important;
+}
+
+.nav-link {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  padding: 0.5rem 1rem !important;
+  transition: all 0.3s ease;
+  color: var(--primary-dark) !important;
+}
+
+.nav-link:hover {
+  color: var(--primary-darkest) !important;
+  background-color: var(--primary-light);
+  border-radius: 8px;
+}
+
+.navbar-toggler {
+  border-color: var(--primary) !important;
+  color: var(--primary-dark) !important;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(133, 189, 191, 0.25);
+}
+
+/* Mobile styles */
+@media (max-width: 991px) {
+  .navbar-collapse {
+    padding-top: 1rem;
+    background-color: var(--primary-lightest);
+  }
+
+  .nav-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--primary-light);
+  }
+
+  .nav-item:last-child {
+    border-bottom: none;
+  }
+
+  .navbar-nav {
+    padding-bottom: 0.5rem;
+  }
+
+  .btn-link {
+    width: 100%;
+    text-align: left;
+    padding-left: 0;
+  }
+}
+
+/* Active link styling */
+.nav-link.active {
+  background-color: var(--primary);
+  color: white !important;
+  border-radius: 8px;
+}
+
+/* Navbar button styling */
+.navbar .btn {
+  background-color: var(--primary-light);
+  color: var(--primary-darkest);
+  border: 1px solid var(--primary);
+  transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Override Bootstrap navbar-light specific styles */
+.navbar-light .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(4, 15, 15, 0.75)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-light .navbar-toggler {
+  border-color: var(--primary-dark);
+} 
