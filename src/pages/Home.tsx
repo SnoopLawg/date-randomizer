@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SpinWheel from '../components/SpinWheel';
 import DateIdeasCard from '../components/DateIdeasCard';
+import NearbyPlaces from '../components/NearbyPlaces';
 
 const Home: React.FC = () => {
     const [selectedIdea, setSelectedIdea] = useState<string | null>(null);

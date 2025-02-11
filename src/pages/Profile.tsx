@@ -5,7 +5,7 @@ import 'react-range-slider-input/dist/style.css';
 
 const Profile: React.FC = () => {
   const { user } = useAuth();
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
+  const [priceRange, setPriceRange] = useState([20, 100]);
   const [distance, setDistance] = useState(10);
   const [preferences, setPreferences] = useState({
     dining: true,
