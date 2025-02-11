@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 /* existing custom styles (if needed) */
-/*:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  ... 
-}*/
 
 :root {
   --primary-lightest: #C9FBFF;

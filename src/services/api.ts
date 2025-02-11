@@ -25,12 +25,8 @@ export const getPlaces = async (query: string) => {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
       };
-    } catch (locationError: unknown) {
-      if (locationError instanceof Error) {
-        console.log('Using default location due to:', locationError.message);
-      } else {
-        console.log('Using default location due to unknown error');
-      }
+    } catch (locationError) {
+      console.log('Using default location due to:', locationError.message);
       coordinates = DEFAULT_COORDINATES;
     }
 
