@@ -28,7 +28,16 @@ const Profile: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ priceRange, distance, preferences });
+
+    if (user) {
+      const preferences = {
+        priceRange,
+        distance
+      };
+
+      localStorage.setItem(`preferences_${user.uid}`, JSON.stringify(preferences));
+      alert('Preferences saved successfully!');
+    }
   };
 
   return (

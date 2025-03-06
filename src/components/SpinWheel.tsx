@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import '../styles/SpinWheel.css';
 
 interface SpinWheelProps {
   options: string[];
@@ -7,7 +8,6 @@ interface SpinWheelProps {
 
 const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const [isSpinning, setIsSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);          // Current rotation (degrees)
   const [spinVelocity, setSpinVelocity] = useState(0);  // Spin speed
@@ -63,7 +63,7 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#000';
-      ctx.font = 'bold 14px sans-serif';
+      ctx.font = 'bold 14px var(--font-body)';
 
       // Draw text closer to center so it doesn't clip
       ctx.fillText(options[i], radius * 0.6, 0);
@@ -71,7 +71,7 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
     }
   };
 
-  // Redraw when rotation changes
+  // Force redraw when options change
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -92,12 +92,12 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
 
     drawWheel();
     ctx.restore();
-  }, [rotation]);
+  }, [rotation, options]); // Add options to dependencies
 
   // Spin animation using requestAnimationFrame
   useEffect(() => {
     let animFrame: number;
-  
+
     const animate = () => {
       if (spinVelocity > 0.1) {
         // Keep spinning
@@ -108,32 +108,32 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
         // Wheel stops
         setSpinVelocity(0);
         setIsSpinning(false);
-  
+
         // -- START of corrected selection logic --
-        const pointerAngle = 245; // if pointer is visually at top
+        const pointerAngle = 242; // if pointer is visually at top . Higher is right clockwise, lower is left counterclockwise
         const degreesPerSlice = 360 / options.length;
-  
+
         let finalRotation = rotation % 360;
         if (finalRotation < 0) finalRotation += 360;
-  
+
         let angleToPointer = (pointerAngle - finalRotation + 360) % 360;
         // Round to the closest slice center
         angleToPointer = (angleToPointer + degreesPerSlice / 2) % 360;
-  
-        let index = Math.floor(angleToPointer / degreesPerSlice);
+
+        const index = Math.floor(angleToPointer / degreesPerSlice);
         // -- END of corrected selection logic --
-  
+
         setSelectedIndex(index);
         onSelect(options[index]);
       }
     };
-  
+
     if (isSpinning) {
       animFrame = requestAnimationFrame(animate);
     }
     return () => cancelAnimationFrame(animFrame);
   }, [isSpinning, spinVelocity, rotation, options, onSelect]);
-  
+
   // Start the spin
   const handleSpin = () => {
     if (isSpinning) return;
@@ -143,23 +143,26 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
   };
 
   return (
-    <div style={{ 
-      position: 'relative', 
-      width: '100%', 
-      maxWidth: '400px', 
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      maxWidth: '350px',
       margin: '0 auto',
-      padding: '0 15px' 
+      padding: '0 15px',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
     }}>
       <canvas
         ref={canvasRef}
-        width={400}
-        height={400}
-        style={{ 
-          display: 'block', 
+        width={350}
+        height={350}
+        style={{
+          display: 'block',
           margin: '0 auto',
           width: '100%',
           height: 'auto',
-          maxWidth: '400px'
+          maxWidth: '350px'
         }}
       />
 
@@ -182,8 +185,12 @@ const SpinWheel: React.FC<SpinWheelProps> = ({ options, onSelect }) => {
       <button
         onClick={handleSpin}
         disabled={isSpinning}
-        className="btn btn-primary btn-block mt-3"
-        style={{ width: '100%' }}
+        className="btn btn-primary mt-3"
+        style={{
+          width: '80%',
+          maxWidth: '250px',
+          margin: '1rem auto 0'
+        }}
       >
         {isSpinning ? 'Spinning...' : 'Spin the Wheel'}
       </button>

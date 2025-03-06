@@ -1,39 +1,52 @@
-import express from 'express';
-import { Client, PlaceData, LatLng } from '@googlemaps/google-maps-services-js';
+import express from "express";
+import { Client } from "@googlemaps/google-maps-services-js";
+import axios from "axios";
 
 const router = express.Router();
-const client = new Client({});
+const googleMapsClient = new Client({});
 
-router.get('/search', async (req, res) => {
-    try {
-        const { lat, lng, query } = req.query;
-        
-        const params = {
-            location: { 
-                lat: Number(lat) || 0, 
-                lng: Number(lng) || 0 
-            } as LatLng,
-            radius: 5000, // 5km radius
-            keyword: query ? String(query) : undefined,
-            key: process.env.GOOGLE_MAPS_API_KEY || ''
-        };
+// Google Places API endpoint
+router.get("/", async (req, res) => {
+  try {
+    const { query, lat, lng, radius = 10000 } = req.query;
 
-        const response = await client.placesNearby({ params });
-        
-        const places = response.data.results.map(place => ({
-            id: place.place_id,
-            name: place.name,
-            address: place.vicinity,
-            rating: place.rating,
-            location: place.geometry?.location,
-            types: place.types
-        }));
-
-        res.json(places);
-    } catch (error) {
-        console.error('Places API Error:', error);
-        res.status(500).json({ error: "Internal server error" });
+    if (!query) {
+      return res.status(400).json({ error: "Query parameter is required" });
     }
+
+    // Use provided coordinates or default to Lehi, UT
+    const latitude = parseFloat(lat as string) || 40.3916;
+    const longitude = parseFloat(lng as string) || -111.8508;
+
+    // Use the Text Search API
+    const response = await googleMapsClient.textSearch({
+      params: {
+        query: query as string,
+        location: { lat: latitude, lng: longitude },
+        radius: parseInt(radius as string),
+        key: process.env.GOOGLE_MAPS_API_KEY || "",
+      },
+    });
+
+    const places = response.data.results.map((place) => ({
+      id: place.place_id,
+      name: place.name,
+      address: place.formatted_address,
+      rating: place.rating,
+      price_level: place.price_level,
+      photos: place.photos?.map(
+        (photo) =>
+          `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      ),
+      location: place.geometry?.location,
+      types: place.types,
+    }));
+
+    res.json(places);
+  } catch (error) {
+    console.error("Error fetching places:", error);
+    res.status(500).json({ error: "Failed to fetch places" });
+  }
 });
 
-export default router; 
+export default router;

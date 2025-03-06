@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 
 const api = axios.create({
   baseURL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -27,14 +27,14 @@ export const getPlaces = async (query: string) => {
       };
     } catch (locationError: unknown) {
       if (locationError instanceof Error) {
-        console.log('Using default location due to:', locationError.message);
+        console.log("Using default location due to:", locationError.message);
       } else {
-        console.log('Using default location due to unknown error');
+        console.log("Using default location due to unknown error");
       }
       coordinates = DEFAULT_COORDINATES;
     }
 
-    const response = await api.get('/api/places', {
+    const response = await api.get("/api/places", {
       params: {
         query,
         lat: coordinates.latitude,
@@ -43,43 +43,29 @@ export const getPlaces = async (query: string) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching places:', error);
+    console.error("Error fetching places:", error);
     throw error;
-  }
-};
-
-export const getYelpInfo = async (name: string, address: string) => {
-  try {
-    const response = await api.get('/api/yelp', {
-      params: {
-        name,
-        address,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching Yelp data:', error);
-    return {};
   }
 };
 
 const getCurrentPosition = (): Promise<GeolocationPosition> => {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
-      reject(new Error('Geolocation is not supported by your browser'));
+      reject(new Error("Geolocation is not supported by your browser"));
       return;
     }
 
     navigator.geolocation.getCurrentPosition(
       resolve,
       (error) => {
-        let errorMessage = 'Location access denied. Using default location.';
+        let errorMessage = "Location access denied. Using default location.";
         if (error.code === error.PERMISSION_DENIED) {
-          errorMessage = 'Location permission denied. Using default location.';
+          errorMessage = "Location permission denied. Using default location.";
         } else if (error.code === error.POSITION_UNAVAILABLE) {
-          errorMessage = 'Location information unavailable. Using default location.';
+          errorMessage =
+            "Location information unavailable. Using default location.";
         } else if (error.code === error.TIMEOUT) {
-          errorMessage = 'Location request timed out. Using default location.';
+          errorMessage = "Location request timed out. Using default location.";
         }
         reject(new Error(errorMessage));
       },
@@ -90,4 +76,4 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
       }
     );
   });
-}; 
+};

@@ -1,3 +1,4 @@
+@import './styles/variables.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,13 +10,11 @@
 }*/
 
 :root {
-  --primary-lightest: #C9FBFF;
-  --primary-light: #c2fcf7;
-  --primary: #85bdbf;
-  --primary-dark: #57737a;
-  --primary-darkest: #040f0f;
+  /* Font settings */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Poppins', sans-serif;
   
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
   background-color: #ffffff;
@@ -25,6 +24,16 @@
 body {
   margin: 0;
   min-width: 320px;
+}
+
+/* Typography styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+}
+
+p {
+  font-family: var(--font-body);
 }
 
 /* Remove or comment out the dark theme styles */
@@ -45,20 +54,20 @@ h1 {
 
 button {
   border-radius: 8px;
-  border: 1px solid var(--primary);
+  border: 1px solid var(--primary-lightest);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
-  font-family: inherit;
-  background-color: var(--primary-light);
-  color: var(--primary-darkest);
+  font-family: var(--font-body);
+  background-color: var(--primary);
+  color: white;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 button:hover {
-  background-color: var(--primary);
+  background-color: var(--primary-dark);
   color: white;
-  border-color: var(--primary);
+  border-color: var(--primary-dark);
 }
 button:focus,
 button:focus-visible {
@@ -82,13 +91,13 @@ button:focus-visible {
 
 /* Override Bootstrap primary color */
 .btn-primary {
-  background-color: var(--primary-light) !important;
+  background-color: var(--primary) !important;
   border-color: var(--primary) !important;
-  color: var(--primary-darkest) !important;
+  color: white !important;
 }
 
 .btn-primary:hover {
-  background-color: var(--primary) !important;
+  background-color: var(--primary-dark) !important;
   color: white !important;
 }
 
@@ -113,5 +122,5 @@ button:focus-visible {
 /* Form control focus states */
 .form-control:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 0.25rem rgba(133, 189, 191, 0.25);
+  box-shadow: 0 0 0 0.25rem rgba(106, 76, 147, 0.25);
 }

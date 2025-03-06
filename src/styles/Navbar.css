@@ -4,7 +4,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: var(--primary-lightest) !important;
+  background-color: var(--primary) !important;
   backdrop-filter: blur(5px);
   border-bottom: 1px solid var(--primary);
 }
@@ -12,14 +12,16 @@
 .navbar-brand {
   font-size: clamp(1.2rem, 3vw, 1.5rem);
   font-weight: bold;
+  font-family: var(--font-heading);
   color: var(--primary-darkest) !important;
 }
 
 .nav-link {
   font-size: clamp(1rem, 2.5vw, 1.1rem);
+  font-family: var(--font-body);
   padding: 0.5rem 1rem !important;
   transition: all 0.3s ease;
-  color: var(--primary-dark) !important;
+  color: white !important;
 }
 
 .nav-link:hover {

@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navbar.css';
 
 const Navbar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    logout();
+    setIsOpen(false);
+    navigate('/');
   };
 
   return (
@@ -17,7 +25,7 @@ const Navbar: React.FC = () => {
         <Link className="navbar-brand" to="/">
           Date Randomizer
         </Link>
-        
+
         {/* Hamburger button */}
         <button
           className="navbar-toggler"
@@ -34,8 +42,8 @@ const Navbar: React.FC = () => {
         <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`} id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link 
-                className="nav-link" 
+              <Link
+                className="nav-link"
                 to="/"
                 onClick={() => setIsOpen(false)}
               >
@@ -43,8 +51,8 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link 
-                className="nav-link" 
+              <Link
+                className="nav-link"
                 to="/about"
                 onClick={() => setIsOpen(false)}
               >
@@ -54,21 +62,18 @@ const Navbar: React.FC = () => {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <Link 
-                    className="nav-link" 
+                  <Link
+                    className="nav-link"
                     to="/profile"
                     onClick={() => setIsOpen(false)}
                   >
-                    Profile
+                    {user?.name || 'Profile'}
                   </Link>
                 </li>
                 <li className="nav-item">
                   <button
                     className="nav-link btn btn-link"
-                    onClick={() => {
-                      logout();
-                      setIsOpen(false);
-                    }}
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
@@ -77,17 +82,17 @@ const Navbar: React.FC = () => {
             ) : (
               <>
                 <li className="nav-item">
-                  <Link 
-                    className="nav-link" 
-                    to="/signin"
+                  <Link
+                    className="nav-link"
+                    to="/login"
                     onClick={() => setIsOpen(false)}
                   >
-                    Sign In
+                    Login
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link 
-                    className="nav-link" 
+                  <Link
+                    className="nav-link"
                     to="/signup"
                     onClick={() => setIsOpen(false)}
                   >

@@ -1,67 +1,71 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const About: React.FC = () => {
-    const navigate = useNavigate();
-
     return (
-        <div className="container py-5">
-            <div className="row justify-content-center">
-                <div className="col-lg-8">
-                    <div className="card shadow-sm">
-                        <div className="card-header" style={{ backgroundColor: 'var(--primary)' }}>
-                            <h1 className="mb-0 text-white">About Date Randomizer</h1>
-                        </div>
-                        <div className="card-body" style={{ opacity: 0.9 }}>
-                            <div className="mb-4">
-                                <p style={{ color: 'var(--primary-dark)' }}>
-                                    Welcome to the Date Randomizer app! This app is designed to help you and your partner decide on
-                                    fun and exciting activities for your dates. Whether you're looking to go out to eat, grab a snack,
-                                    visit famous places, or play some board games, we've got you covered.
-                                </p>
-                                <p style={{ color: 'var(--primary-dark)' }}>
-                                    Simply use our randomizer feature to get a spontaneous suggestion for your next date. No more
-                                    indecisiveness or arguments about what to do - let the Date Randomizer make the choice for you!
-                                </p>
-                            </div>
+        <div className="container mt-5">
+            <h1>About Date Randomizer</h1>
 
-                            <div className="mb-4">
-                                <h2 style={{ color: 'var(--primary-darkest)' }}>Project Roadmap</h2>
-                                <div className="list-group">
-                                    <div className="list-group-item" style={{ backgroundColor: 'transparent' }}>
-                                        <h5 className="mb-1" style={{ color: 'var(--primary-darkest)' }}>Phase 1: Yelp Integration</h5>
-                                        <p className="mb-1" style={{ color: 'var(--primary-dark)' }}>Connect with Yelp API to provide real reviews and ratings for date locations</p>
-                                    </div>
-                                    <div className="list-group-item" style={{ backgroundColor: 'transparent' }}>
-                                        <h5 className="mb-1" style={{ color: 'var(--primary-darkest)' }}>Phase 2: Google Maps</h5>
-                                        <p className="mb-1" style={{ color: 'var(--primary-dark)' }}>Integrate Google Maps for directions and location visualization</p>
-                                    </div>
-                                    <div className="list-group-item" style={{ backgroundColor: 'transparent' }}>
-                                        <h5 className="mb-1" style={{ color: 'var(--primary-darkest)' }}>Phase 3: Price Filtering</h5>
-                                        <p className="mb-1" style={{ color: 'var(--primary-dark)' }}>Add price range filters and budget-friendly options</p>
-                                    </div>
-                                    <div className="list-group-item" style={{ backgroundColor: 'transparent' }}>
-                                        <h5 className="mb-1" style={{ color: 'var(--primary-darkest)' }}>Phase 4: Weather API</h5>
-                                        <p className="mb-1" style={{ color: 'var(--primary-dark)' }}>Weather-based date suggestions and alternative indoor/outdoor options</p>
-                                    </div>
-                                </div>
-                            </div>
+            <div className="card shadow-sm mb-4">
+                <div className="card-header" style={{ backgroundColor: 'var(--primary)' }}>
+                    <h5 className="mb-0 text-white">Project Overview</h5>
+                </div>
+                <div className="card-body">
+                    <p>
+                        Date Randomizer is a web application designed to help couples and friends find
+                        interesting date ideas and nearby places to visit. Simply spin the wheel to get a
+                        random date idea, then explore places in your area matching that activity.
+                    </p>
 
-                            <div className="text-center">
-                                <button
-                                    className="btn"
-                                    onClick={() => navigate('/')}
-                                    style={{
-                                        backgroundColor: 'var(--primary-light)',
-                                        color: 'var(--primary-darkest)',
-                                        border: '1px solid var(--primary)',
-                                    }}
-                                >
-                                    Back to Home
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                    <p>
+                        The application uses your location (with permission) to find relevant places in
+                        your area, and provides weather information to help you plan accordingly.
+                    </p>
+                </div>
+            </div>
+
+            <div className="card shadow-sm mb-4">
+                <div className="card-header" style={{ backgroundColor: 'var(--primary)' }}>
+                    <h5 className="mb-0 text-white">Project Phases</h5>
+                </div>
+                <div className="card-body">
+                    <ul className="list-group">
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                            ✅ Phase 1: UI Design and Core Functionality
+                            <span className="badge bg-success">Completed</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                            ✅ Phase 2: Integration with Location Services
+                            <span className="badge bg-success">Completed</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                            ✅ Phase 3: Weather API Integration
+                            <span className="badge bg-success">Completed</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                            ✅ Phase 4: User Authentication and Preferences
+                            <span className="badge bg-success">Completed</span>
+                        </li>
+                        <li className="list-group-item d-flex justify-content-between align-items-center">
+                            ⏳ Phase 5: Advanced Recommendations and Analytics
+                            <span className="badge bg-warning">In Progress</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="card shadow-sm">
+                <div className="card-header" style={{ backgroundColor: 'var(--primary)' }}>
+                    <h5 className="mb-0 text-white">Technologies Used</h5>
+                </div>
+                <div className="card-body">
+                    <ul className="list-group">
+                        <li className="list-group-item">React with TypeScript</li>
+                        <li className="list-group-item">Bootstrap 5 for styling</li>
+                        <li className="list-group-item">Google Maps API for location services</li>
+                        <li className="list-group-item">OpenWeatherMap API for weather data</li>
+                        <li className="list-group-item">Firebase Authentication</li>
+                        <li className="list-group-item">Express.js backend</li>
+                    </ul>
                 </div>
             </div>
         </div>

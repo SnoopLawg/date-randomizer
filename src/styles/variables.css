@@ -1,0 +1,36 @@
+:root {
+  /* Vibrant Primary Colors */
+  --primary: #e43c12aa;       /* Vibrant red-orange from the image */
+  --primary-light: #F05E36;
+  --primary-lighter: #F7917A;
+  --primary-lightest: #FDE2DC;
+  --primary-dark: #B32E0D;
+  --primary-darkest: #7A1F08;
+  
+  /* Accent Colors */
+  --accent: #EFB11D;        /* Golden yellow from the image */
+  --accent-light: #F4C550;
+  --accent-dark: #D69C0F;
+  
+  /* Secondary Accent */
+  --secondary: #D6536D;     /* Pink-red from the image */
+  --secondary-light: #E27A8E;
+  --secondary-dark: #B33E55;
+  
+  /* Neutral Colors */
+  --neutral-dark: #264653;
+  --neutral: #546A76;
+  --neutral-light: #9DB4C0;
+  --neutral-lighter: #D0E0E8;
+  --neutral-lightest: #EBE9E1;  /* Light beige from the image */
+  
+  /* Feedback Colors */
+  --success: #4CAF50;
+  --warning: #FFC107;
+  --error: #F44336;
+  --info: #2196F3;
+  
+  /* Layout Variables */
+  --randomizer-card-height: 650px;
+  --date-ideas-card-height: 400px;
+} 
