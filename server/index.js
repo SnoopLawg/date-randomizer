@@ -19,13 +19,33 @@ console.log("PORT:", process.env.PORT);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Configure CORS with environment-aware settings
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",")
+  : ["http://localhost:5173", "http://localhost:5174"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) === -1) {
+        console.log(`Allowing origin: ${origin}`);
+      }
+
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
 // Add logging middleware to debug requests
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
 
-app.use(cors());
 app.use(express.json());
 
 // Mount the routers

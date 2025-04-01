@@ -6,6 +6,8 @@ const DEFAULT_COORDINATES = {
   longitude: -111.8508,
 };
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface PlaceSearchParams {
   query: string;
   latitude?: number;
@@ -27,7 +29,7 @@ export const searchPlaces = async (params: PlaceSearchParams) => {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         };
-      } catch (error) {
+      } catch {
         console.log("Using default location (Lehi, UT)");
         coordinates = DEFAULT_COORDINATES;
       }
@@ -40,8 +42,8 @@ export const searchPlaces = async (params: PlaceSearchParams) => {
       radius: 10000,
     });
 
-    // Make API call to your backend - fixed endpoint path
-    const response = await axios.get("/api/places", {
+    // Make API call to backend using full URL
+    const response = await axios.get(`${API_URL}/api/places`, {
       params: {
         query: params.query,
         lat: coordinates.latitude,
@@ -76,30 +78,4 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
       maximumAge: 0,
     });
   });
-};
-
-// Function to get Yelp data for a place
-export const getYelpInfo = async (name: string, address: string) => {
-  try {
-    const response = await axios.get("/api/yelp", {
-      params: {
-        term: name,
-        location: address,
-        limit: 1,
-      },
-    });
-
-    if (response.data.businesses && response.data.businesses.length > 0) {
-      const business = response.data.businesses[0];
-      return {
-        yelpRating: business.rating,
-        yelpPrice: business.price,
-        yelpUrl: business.url,
-      };
-    }
-    return {};
-  } catch (error) {
-    console.error("Error fetching Yelp data:", error);
-    return {};
-  }
 };

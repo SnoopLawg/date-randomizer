@@ -8,15 +8,24 @@ const googleMapsClient = new Client({});
 // Google Places API endpoint
 router.get("/", async (req, res) => {
   try {
+    console.log("Received places request with query params:", req.query);
     const { query, lat, lng, radius = 10000 } = req.query;
 
     if (!query) {
+      console.log("Missing query parameter");
       return res.status(400).json({ error: "Query parameter is required" });
     }
 
     // Use provided coordinates or default to Lehi, UT
     const latitude = parseFloat(lat) || 40.3916;
     const longitude = parseFloat(lng) || -111.8508;
+
+    console.log("Making request to Google Places API with params:", {
+      query,
+      location: { lat: latitude, lng: longitude },
+      radius: parseInt(radius),
+      key: process.env.GOOGLE_MAPS_API_KEY ? "Present" : "Missing",
+    });
 
     // Use the Text Search API
     const response = await googleMapsClient.textSearch({
@@ -27,6 +36,8 @@ router.get("/", async (req, res) => {
         key: process.env.GOOGLE_MAPS_API_KEY || "",
       },
     });
+
+    console.log(`Found ${response.data.results.length} places`);
 
     const places = response.data.results.map((place) => ({
       id: place.place_id,
@@ -45,8 +56,13 @@ router.get("/", async (req, res) => {
     res.json(places);
   } catch (error) {
     console.error("Error fetching places:", error);
+    console.error("Error details:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+    });
     res.status(500).json({ error: "Failed to fetch places" });
   }
 });
 
-export default router; 
+export default router;
