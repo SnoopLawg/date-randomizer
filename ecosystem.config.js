@@ -1,8 +1,8 @@
-export default {
+module.exports = {
   apps: [
     {
       name: "date-randomizer-api",
-      script: "./server/index.js",
+      script: "server/index.js",
       env: {
         NODE_ENV: "production",
         PORT: 3001,
