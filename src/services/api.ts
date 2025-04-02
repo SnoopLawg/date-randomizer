@@ -1,9 +1,7 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-
 const api = axios.create({
-  baseURL,
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -34,7 +32,7 @@ export const getPlaces = async (query: string) => {
       coordinates = DEFAULT_COORDINATES;
     }
 
-    const response = await api.get("/api/places", {
+    const response = await api.get("/places", {
       params: {
         query,
         lat: coordinates.latitude,
@@ -76,4 +74,26 @@ const getCurrentPosition = (): Promise<GeolocationPosition> => {
       }
     );
   });
+};
+
+export const searchPlaces = async (params: {
+  query: string;
+  lat: number;
+  lng: number;
+  radius?: number;
+}) => {
+  try {
+    console.log("Making request to /api/places with params:", params);
+    const response = await api.get("/places", { params });
+    console.log("Response data:", response.data);
+    console.log("Response status:", response.status);
+    return response.data;
+  } catch (error) {
+    console.error("Error searching places:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Response data:", error.response?.data);
+      console.error("Response status:", error.response?.status);
+    }
+    throw error;
+  }
 };
