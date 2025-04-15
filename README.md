@@ -16,12 +16,14 @@ A web application that helps users discover new date ideas and locations in thei
 ## Tech Stack
 
 - Frontend:
+
   - React with Vite
   - TypeScript
   - Tailwind CSS
   - Google Maps JavaScript API
 
 - Backend:
+
   - Node.js
   - Express
   - Google Places API
@@ -35,17 +37,20 @@ A web application that helps users discover new date ideas and locations in thei
 ## Local Development Setup
 
 1. Clone the repository:
+
    ```bash
    git clone [repository-url]
    cd date-randomizer
    ```
 
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create a `.env` file in the root directory:
+
    ```env
    VITE_API_URL=http://localhost:3002
    VITE_FRONTEND_URL=http://localhost:5173
@@ -54,6 +59,7 @@ A web application that helps users discover new date ideas and locations in thei
    ```
 
 4. Create a `server/.env` file:
+
    ```env
    GOOGLE_MAPS_API_KEY=your_google_maps_api_key
    PORT=3002
@@ -61,6 +67,7 @@ A web application that helps users discover new date ideas and locations in thei
    ```
 
 5. Start the development server:
+
    ```bash
    # Start the backend server
    cd server
@@ -84,16 +91,19 @@ The application is deployed using AWS services:
 ### Deployment Steps
 
 1. Build the frontend:
+
    ```bash
    npm run build
    ```
 
 2. Deploy to S3:
+
    ```bash
    aws s3 sync dist/ s3://date-randomizer-frontend/ --delete
    ```
 
 3. Backend deployment:
+
    ```bash
    # SSH into EC2
    ssh -i ./cs3660-backend-key ec2-user@ec2-3-89-231-148.compute-1.amazonaws.com
@@ -109,6 +119,7 @@ The application is deployed using AWS services:
 ## Environment Variables
 
 ### Frontend (.env.production)
+
 ```env
 VITE_API_URL=https://qhtyt8bpf2.execute-api.us-west-1.amazonaws.com/prod
 VITE_FRONTEND_URL=https://d13swv3yj9soxt.cloudfront.net
@@ -116,6 +127,7 @@ VITE_WEATHER_API_KEY=your_weather_api_key
 ```
 
 ### Backend (server/.env)
+
 ```env
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 PORT=3001

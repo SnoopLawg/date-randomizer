@@ -5,6 +5,7 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import placesRouter from "./api/places.js";
 import http from "http";
+import rateLimit from "express-rate-limit";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,9 +21,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Configure CORS with environment-aware settings
-const allowedOrigins = process.env.ALLOWED_ORIGINS
+const isDevelopment = process.env.NODE_ENV !== "production";
+const allowedOrigins = isDevelopment
+  ? ["http://localhost:5173", "http://localhost:5174"]
+  : process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",")
-  : ["http://localhost:5173", "http://localhost:5174"];
+  : [];
 
 app.use(
   cors({
@@ -31,7 +35,9 @@ app.use(
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.indexOf(origin) === -1) {
-        console.log(`Allowing origin: ${origin}`);
+        const error = new Error("Not allowed by CORS");
+        console.error(`CORS blocked request from origin: ${origin}`);
+        return callback(error, false);
       }
 
       return callback(null, true);
@@ -48,12 +54,33 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+// Add rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later",
+});
+
+app.use(limiter);
+
 // Mount the routers
 app.use("/api/places", placesRouter);
 
 // Add a test route
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working!" });
+});
+
+// Add error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: "Something went wrong!",
+    message:
+      process.env.NODE_ENV === "production"
+        ? "Internal server error"
+        : err.message,
+  });
 });
 
 // Create HTTP server
