@@ -1,9 +1,16 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import axios from 'axios';
+
+// Create axios instance with base URL
+const api = axios.create({
+  baseURL: 'http://localhost:3002'
+});
 
 interface User {
   id: string;
-  name: string;
   email: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 interface AuthContextType {
@@ -34,14 +41,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const checkAuth = () => {
       const storedUser = localStorage.getItem('user');
-      if (storedUser) {
+      const storedToken = localStorage.getItem('token');
+      if (storedUser && storedToken) {
         try {
           const parsedUser = JSON.parse(storedUser);
           setUser(parsedUser);
           setIsAuthenticated(true);
-        } catch (e) {
+          // Set the token for future requests
+          api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        } catch (error) {
           // Invalid stored data
           localStorage.removeItem('user');
+          localStorage.removeItem('token');
         }
       }
     };
@@ -54,33 +65,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setError(null);
 
     try {
-      // Simulate API call with Promise (microtask)
-      return new Promise((resolve) => {
-        // Simulate network delay (macrotask)
-        setTimeout(() => {
-          // Simple validation for demo purposes
-          if (email && password.length >= 6) {
-            const newUser = {
-              id: '1',
-              name: email.split('@')[0],
-              email
-            };
-
-            setUser(newUser);
-            setIsAuthenticated(true);
-            localStorage.setItem('user', JSON.stringify(newUser));
-            resolve(true);
-          } else {
-            setError('Invalid credentials. Password must be at least 6 characters.');
-            resolve(false);
-          }
-          setLoading(false);
-        }, 1000);
+      const response = await api.post('/api/auth/login', {
+        email,
+        password
       });
-    } catch (err) {
-      setError('An error occurred during login.');
-      setLoading(false);
+
+      if (response.data.token && response.data.user) {
+        const { token, user } = response.data;
+
+        // Store user and token
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', token);
+
+        // Set the token for future requests
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+        setUser(user);
+        setIsAuthenticated(true);
+        return true;
+      }
+
+      setError('Invalid response from server');
       return false;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        setError(error.response?.data?.error || 'Login failed. Please try again.');
+      } else {
+        setError('An unexpected error occurred');
+      }
+      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,6 +103,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(false);
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
   };
 
   return (

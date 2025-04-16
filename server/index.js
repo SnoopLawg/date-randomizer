@@ -4,8 +4,11 @@ import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import placesRouter from "./api/places.js";
+import authRouter from "./routes/auth.js";
 import http from "http";
-import rateLimit from "express-rate-limit";
+import { rateLimit } from "express-rate-limit";
+import sequelize from "./config/database.js";
+import models from "./models/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -65,6 +68,7 @@ app.use(limiter);
 
 // Mount the routers
 app.use("/api/places", placesRouter);
+app.use("/api/auth", authRouter);
 
 // Add a test route
 app.get("/api/test", (req, res) => {
@@ -87,24 +91,37 @@ app.use((err, req, res, next) => {
 const server = http.createServer(app);
 
 // Function to find an available port
-const startServer = (port) => {
-  server.listen(port);
-  server.on("error", (e) => {
-    if (e.code === "EADDRINUSE") {
-      console.log(`Port ${port} is in use, trying ${port + 1}`);
-      startServer(port + 1);
-    }
-  });
-  server.on("listening", () => {
-    const actualPort = server.address().port;
-    console.log(`Server running on port ${actualPort}`);
-    // If you need to communicate the port to the frontend
-    if (actualPort !== PORT) {
-      console.log(
-        `Note: Update your vite.config.ts proxy target to http://localhost:${actualPort}`
-      );
-    }
-  });
+const startServer = async (port) => {
+  try {
+    // Test database connection
+    await sequelize.authenticate();
+    console.log("Database connection has been established successfully.");
+
+    // Sync all models with force: true to recreate tables
+    await sequelize.sync({ force: true });
+    console.log("All models were synchronized successfully.");
+
+    server.listen(port);
+    server.on("error", (e) => {
+      if (e.code === "EADDRINUSE") {
+        console.log(`Port ${port} is in use, trying ${port + 1}`);
+        startServer(port + 1);
+      }
+    });
+    server.on("listening", () => {
+      const actualPort = server.address().port;
+      console.log(`Server running on port ${actualPort}`);
+      // If you need to communicate the port to the frontend
+      if (actualPort !== PORT) {
+        console.log(
+          `Note: Update your vite.config.ts proxy target to http://localhost:${actualPort}`
+        );
+      }
+    });
+  } catch (error) {
+    console.error("Unable to start server:", error);
+    process.exit(1);
+  }
 };
 
 startServer(PORT);
