@@ -21,6 +21,12 @@
     "database": "date_randomizer",
     "host": "date-randomizer-db.c2fqqeim0ol3.us-east-1.rds.amazonaws.com",
     "port": 5432,
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
