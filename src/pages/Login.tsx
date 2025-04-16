@@ -1,63 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import axios, { AxiosError } from 'axios';
+
+// Create axios instance with base URL
+const api = axios.create({
+    baseURL: 'http://localhost:3002'
+});
 
 const Login: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [formError, setFormError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const { login, isAuthenticated, loading, error } = useAuth();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+    const { isAuthenticated, error: authError } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
-    // Redirect if already authenticated
+    useEffect(() => {
+        if (location.state?.message) {
+            setSuccessMessage(location.state.message);
+            // Clear the state to prevent showing the message again on refresh
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
+
     useEffect(() => {
         if (isAuthenticated) {
             navigate('/');
         }
     }, [isAuthenticated, navigate]);
 
-    const validateForm = (): boolean => {
-        setFormError('');
-
-        if (!email) {
-            setFormError('Email is required');
-            return false;
-        }
-
-        if (!password) {
-            setFormError('Password is required');
-            return false;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setFormError('Please enter a valid email address');
-            return false;
-        }
-
-        return true;
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!validateForm()) return;
-
-        setIsSubmitting(true);
+        setError('');
+        setSuccessMessage('');
+        setLoading(true);
 
         try {
-            // This is a microtask (Promise)
-            const success = await login(email, password);
+            const response = await api.post('/api/auth/login', {
+                email: formData.email,
+                password: formData.password
+            });
 
-            if (success) {
-                // Redirect will happen via the useEffect above
-                console.log('Login successful');
+            if (response.data.token) {
+                // Store the token
+                localStorage.setItem('token', response.data.token);
+                // Redirect to home page
+                navigate('/');
             }
         } catch (err) {
-            console.error('Login error:', err);
+            const error = err as AxiosError<{ error: string }>;
+            setError(error.response?.data?.error || 'Login failed. Please try again.');
         } finally {
-            setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
@@ -70,28 +69,31 @@ const Login: React.FC = () => {
                             <h2 className="text-center mb-0 text-white">Login</h2>
                         </div>
                         <div className="card-body" style={{ opacity: 0.9 }}>
-                            {(formError || error) && (
-                                <div className="alert alert-danger" role="alert">
-                                    {formError || error}
+                            {successMessage && (
+                                <div className="alert alert-success" role="alert">
+                                    {successMessage}
                                 </div>
                             )}
-
+                            {error || authError && (
+                                <div className="alert alert-danger" role="alert">
+                                    {error || authError}
+                                </div>
+                            )}
                             <form onSubmit={handleSubmit}>
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label" style={{ color: 'var(--primary-darkest)' }}>
-                                        Email address
+                                        Email
                                     </label>
                                     <input
                                         type="email"
                                         className="form-control"
                                         id="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        disabled={loading || isSubmitting}
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                         required
+                                        disabled={loading}
                                     />
                                 </div>
-
                                 <div className="mb-4">
                                     <label htmlFor="password" className="form-label" style={{ color: 'var(--primary-darkest)' }}>
                                         Password
@@ -100,25 +102,24 @@ const Login: React.FC = () => {
                                         type="password"
                                         className="form-control"
                                         id="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        disabled={loading || isSubmitting}
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                         required
+                                        disabled={loading}
                                     />
                                 </div>
-
                                 <div className="d-grid gap-2">
                                     <button
                                         type="submit"
                                         className="btn"
-                                        disabled={loading || isSubmitting}
+                                        disabled={loading}
                                         style={{
                                             backgroundColor: 'var(--primary-light)',
                                             color: 'var(--primary-darkest)',
                                             border: '1px solid var(--primary)',
                                         }}
                                     >
-                                        {loading || isSubmitting ? (
+                                        {loading ? (
                                             <>
                                                 <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                                                 Logging in...
@@ -126,7 +127,6 @@ const Login: React.FC = () => {
                                         ) : 'Login'}
                                     </button>
                                 </div>
-
                                 <p className="text-center mt-3" style={{ color: 'var(--primary-dark)' }}>
                                     Don't have an account? <Link to="/signup" style={{ color: 'var(--primary)' }}>Sign Up</Link>
                                 </p>
